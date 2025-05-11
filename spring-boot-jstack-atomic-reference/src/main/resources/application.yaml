@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: spring-boot-jstack-atomic-reference
+    description: spring-boot-jstack-atomic-reference
+  main:
+    banner-mode: "off"
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  beaninfo:
+    ignore: true
+  profiles.default: local
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jpa:
+      database-platform: org.hibernate.dialect.MysqlDialect
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: true
+  error:
+    whitelabel:
+      enabled: false
+management:
+  server:
+    port: 9090
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, prometheus
+---
+### Development
+spring:
+  config:
+    activate:
+      on-profile: des,uat
+atlante:
+  security:
+    public-endpoints:
+      - /public
+      - /swagger-ui.html
+      - /swagger-ui/**
+      - /v3/api-docs
+      - /v3/api-docs/**
+---
+### Production
+spring:
+  config:
+    activate:
+      on-profile: prd
